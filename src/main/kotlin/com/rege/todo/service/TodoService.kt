@@ -4,8 +4,9 @@ import com.rege.todo.dto.TodoRequest
 import com.rege.todo.dto.TodoResponse
 import com.rege.todo.entity.Todo
 import com.rege.todo.repository.TodoRepository
-import jakarta.transaction.Transactional
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class TodoService(
@@ -18,4 +19,14 @@ class TodoService(
         todoRepository.save(todo)
         return TodoResponse.of(todo)
     }
+
+    @Transactional(readOnly = true)
+    fun getTodo(id: Long): TodoResponse {
+        // findByIdOrNull + 엘비스 연산자(?:)
+        // 좌항이 null이면 우항(예외 던지기) 실행
+        // 코틀린은 기본적으로 null이 Optional 역할을 함
+        val todo = todoRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("해당 todo가 없음")
+        return TodoResponse.of(todo)
+    }
+
 }
