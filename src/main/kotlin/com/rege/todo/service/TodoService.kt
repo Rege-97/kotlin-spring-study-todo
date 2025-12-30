@@ -14,7 +14,7 @@ class TodoService(
 
     @Transactional
     fun create(request: TodoRequest): TodoResponse {
-        val todo = Todo(title = request.title)
+        val todo = Todo(title = request.title)  // new 없이 생성
         todoRepository.save(todo)
         return TodoResponse.of(todo)
     }
